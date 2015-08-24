@@ -12,6 +12,7 @@
     ],
     "require": {
         "lighp/composer-lighp-installers": "dev-master",
-        "lighp/lib-captcha": "dev-master"
+        "lighp/lib-captcha": "dev-master",
+        "lighp/lib-notifications": "dev-master"
     }
 }
