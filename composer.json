@@ -2,7 +2,7 @@
     "name": "lighp/module-blog",
     "description": "A minimalistic blog module, supporting comments.",
     "license": "GPLv3",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "type":"lighp-module",
     "authors": [
         {
