@@ -325,6 +325,9 @@
 		},
 		html: {
 			title: 'HTML'
+		},
+		preview: {
+			title: 'Prévisualisation'
 		}
 	};
 
@@ -365,7 +368,6 @@
 				$urlInput = $('#insertCustomImage-url'),
 				$fileInput = $('#insertCustomImage-file'),
 				$captionInput = $('#insertCustomImage-caption'),
-				$wrapLinkCheckbox = $('#insertCustomImage-wrap-link'),
 				$thumbnails = $modal.find('.thumbnails');
 
 				$urlInput.val('');
@@ -390,7 +392,7 @@
 						var spinnersIdPrefix = 'imgupload-'+(new Date()).getTime();
 						for (var i = 0; i < imgFiles.length; i++) {
 							var file = imgFiles[i];
-							var fileName = file.name || '';
+							var fileName = (file.name) ? file.name : '';
 
 							if (file.type && file.type.indexOf('image/') === -1) {
 								Lighp.triggerError('Cannot upload files: file '+fileName+' is not an image');
@@ -429,11 +431,7 @@
 
 							req.execute(function(data) {
 								var imgPath = Lighp.websiteConf.WEBSITE_ROOT + '/' + data.path;
-								var imgTag = '<img src="'+imgPath+'" alt="'+imgCaption+'"/>';
-								if ($wrapLinkCheckbox.prop('checked')) {
-									imgTag = '<a href="'+imgPath+'" target="_blank">'+imgTag+'</a>';
-								}
-								$('#'+spinnersIdPrefix+'-'+currentFileIndex).replaceWith(imgTag);
+								$('#'+spinnersIdPrefix+'-'+currentFileIndex).replaceWith('<img src="'+imgPath+'" alt="'+imgCaption+'"/>');
 
 								currentFileIndex++;
 								if (imgFiles.length > currentFileIndex) {
@@ -516,7 +514,7 @@
 				previousContent = $newEditorInner[($newEditorInner.is('textarea')) ? 'val' : 'html']();
 			}
 
-			if (newMode != 'wysiwyg') { // Improve HTML visibility
+			if (newMode == 'html') { // Improve HTML visibility
 				previousContent = previousContent
 					.replace(/(<br\s?\/?>)([^\n])/gi, '$1\n$2')
 					.replace(/(<\/(?:p|div|h[0-6]|ul|ol|li|blockquote|hr|pre|code)>)([^\n])/gi, '$1\n$2');
@@ -531,6 +529,11 @@
 			} else {
 				$editor.find('.toolbar-wysiwyg').css('visibility', 'hidden');
 			}
+
+			var isPreview = (newMode == 'preview');
+			$editor.find('.editor-inner.editor-wysiwyg')
+				.toggleClass('uneditable-input', !isPreview)
+				.prop('contenteditable', !isPreview);
 
 			$editor.find('.editor-currentMode').html(newModeData.title);
 			this._editorMode = newMode;
